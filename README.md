@@ -1,2 +1,13 @@
 # dockerized-app
-app crud to run vue3 (quasar) ,PHP,MYSQL with docker integration - docker-training
+
+Stack:
+Frontend
+- React 18 + Typescript
+- Tailwind CSS
+  
+Backend
+- Node.js + Express
+- PostgreSQL
+- Prisma ORM
+
+Docker + Docker Compose
