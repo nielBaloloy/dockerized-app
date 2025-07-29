@@ -1,59 +1,75 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider        = "prisma-client-js"
+  previewFeatures = ["multiSchema"]
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
- 
+  schemas  = ["public"]
 }
 
-model User{
-  id            Int          @id @default(autoincrement())
-  firstName     String?
-  middleName    String?
-  lastName      String?
-  Age           Int
+model users {
+  id         Int      @id @default(autoincrement()) @db.SmallInt
+  firstName  String
+  middleName String?
+  lastName   String?
+  age        Int?     @db.SmallInt
+  created_at DateTime @default(now()) @db.Timestamptz(6)
+  suffixName String?
+  isActive   Boolean  @default(true)
+
   userAccountId Int?
-  UserAccount   UserAccount? @relation(fields: [userAccountId], references: [id])     
-  userRoleId    Int?
-  Role          Role? @relation(fields: [userRoleId], references: [id])
+  userAccount   userAccount? @relation(fields: [userAccountId], references: [id])
+  Role          Role?        @relation(fields: [roleId], references: [id])
+  roleId        Int?
+
+  @@schema("public")
 }
 
-model UserAccount {
-  id          Int           @id @default(autoincrement())
-  username    String
-  email       String        @unique
-  password    String
-  createdAt   DateTime      @default(now())
-  isActive    Boolean       @default(true)
+model userAccount {
+  id         Int      @id @default(autoincrement()) @db.SmallInt
+  username   String
+  email      String
+  password   String
+  userRoleId Int?
+  userRole   Role?    @relation(fields: [userRoleId], references: [id])
+  isActive   Boolean  @default(true)
+  created_at DateTime @default(now()) @db.Timestamptz(6)
 
-  User User[]
+  users users[]
+
+  @@schema("public")
 }
 
 model Role {
-  id           Int       @id  @default(autoincrement())
-  roleName     String?
-  createdAt    DateTime   @default(now())
-  isActive     Boolean    @default(true)
+  id          Int              @id @default(autoincrement())
+  name        String           @unique
+  users       users[]
+  permissions PagePermission[]
+  userAccount userAccount[]
 
-  User User[]
+  @@schema("public")
 }
 
-model UserAddress {
-  id              Int              @id @default(autoincrement())
-  addressType     String?
-  lineAddress     String?
-  regionId        Int?
-  provinceId      Int?
-  cityId          Int?
-  barangayId      Int?
-  zipCode         String?
+model Page {
+  id          Int              @id @default(autoincrement())
+  name        String           @unique
+  permissions PagePermission[]
 
+  @@schema("public")
+}
+
+model PagePermission {
+  id       Int     @id @default(autoincrement())
+  roleId   Int
+  pageId   Int
+  canRead  Boolean @default(false)
+  canWrite Boolean @default(false)
+
+  role Role @relation(fields: [roleId], references: [id])
+  page Page @relation(fields: [pageId], references: [id])
+
+  @@unique([roleId, pageId])
+  @@schema("public")
 }
