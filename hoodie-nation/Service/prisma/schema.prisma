@@ -18,17 +18,19 @@ model users {
   created_at DateTime @default(now()) @db.Timestamptz(6)
   suffixName String?
   isActive   Boolean  @default(true)
-
+  
   userAccountId Int?
   userAccount   userAccount? @relation(fields: [userAccountId], references: [id])
-  Role          Role?        @relation(fields: [roleId], references: [id])
   roleId        Int?
+  Role          Role?        @relation(fields: [roleId], references: [id])
+ 
 
   @@schema("public")
 }
 
 model userAccount {
   id         Int      @id @default(autoincrement()) @db.SmallInt
+  accountId  Int
   username   String
   email      String
   password   String
@@ -41,6 +43,21 @@ model userAccount {
 
   @@schema("public")
 }
+
+model Address{
+  id           Int      @id      @default(autoincrement())
+  region       String?
+  province     String?
+  municipality String?
+  barangay     String?
+  floor_unit   String?
+  zipcode      Int?
+  
+  @@schema("public")
+}
+
+
+
 
 model Role {
   id          Int              @id @default(autoincrement())
@@ -73,3 +90,15 @@ model PagePermission {
   @@unique([roleId, pageId])
   @@schema("public")
 }
+
+model AuditLogs{
+  id            Int       @id @default(autoincrement())
+  action        String?
+  module        String?
+  logTimeDate   DateTime?
+  accountId     Int?
+
+  @@schema("public")
+
+}
+
