@@ -1,9 +1,7 @@
 import { Request, Response } from 'express';
 import  UserService from './user.service';
-import {createUserSchema} from '../dtos/args';
-import { PrismaClient } from '@prisma/client';
+import {createUserSchema,UserField} from '../dtos/args';
 
-const prisma = new PrismaClient();
 export async function getUsers(req: Request, res: Response) {
   try {
     const users = await UserService.getAllUsers(); 
@@ -15,7 +13,7 @@ export async function getUsers(req: Request, res: Response) {
 
 export async function createUser(req: Request, res: Response) {
 try   {
-    const data = createUserSchema.parse(req.body);
+    const data = UserField.parse(req.body);
     const user = await UserService.createUser(data);
     res.status(201).json(user);
   } catch (error: any) {

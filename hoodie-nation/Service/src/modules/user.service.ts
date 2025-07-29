@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import { CreateUserInput } from '../dtos/args';
+import { CreateUserInput,userArgs } from '../dtos/args';
 
 const prisma = new PrismaClient();
 
@@ -19,7 +19,7 @@ const UserService = {
     }
   },
 
-  async createUser(user: CreateUserInput) {
+  async createUser(user: userArgs) {
     try {
       const newUser = await prisma.users.create({
         data: user,
