@@ -3,7 +3,7 @@
 Stack:
 Frontend
 - React 18 + Typescript
-- Tailwind CSS
+- shadcn UI
   
 Backend
 - Node.js + Express
