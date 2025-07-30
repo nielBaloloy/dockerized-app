@@ -11,8 +11,6 @@ export const UserField = z.object({
   created_at: z.preprocess((val) => {
     if (typeof val === 'string' || val instanceof Date) return new Date(val);
   }, z.date().optional()),
-  
-  
 });
 
 export type userArgs = z.infer<typeof UserField>;

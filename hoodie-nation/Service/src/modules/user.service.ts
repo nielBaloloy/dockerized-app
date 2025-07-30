@@ -1,6 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import { CreateUserInput,userArgs } from '../dtos/args';
 
+
 const prisma = new PrismaClient();
 
 const UserService = {
@@ -9,12 +10,15 @@ const UserService = {
       const users = await prisma.users.findMany({
         where:{
           isActive : true
-
-        }
+        },
+        orderBy :{
+          id : "desc"
+        },
       });
      
       return users;
     } catch (error) {
+      
       throw error;
     }
   },
@@ -28,7 +32,22 @@ const UserService = {
     } catch (error) {
       throw error;
     }
+  },
+   async updateUser(id: number, data: userArgs){
+    try {
+    const updatedUser = await prisma.users.update({
+      where: { id },
+      data: data,
+    });
+    return updatedUser;
+  } catch (error) {
+    throw error;
+  }
   }
 };
+
+ 
+
+
 
 export default UserService;

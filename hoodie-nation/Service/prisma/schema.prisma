@@ -10,61 +10,55 @@ datasource db {
 }
 
 model users {
-  id         Int      @id @default(autoincrement()) @db.SmallInt
-  firstName  String
-  middleName String?
-  lastName   String?
-  age        Int?     @db.SmallInt
-  created_at DateTime @default(now()) @db.Timestamptz(6)
-  suffixName String?
-  isActive   Boolean  @default(true)
-  
+  id            Int          @id @default(autoincrement()) @db.SmallInt
+  firstName     String
+  middleName    String?
+  lastName      String?
+  age           Int?         @db.SmallInt
+  created_at    DateTime     @default(now()) @db.Timestamptz(6)
+  suffixName    String?
+  isActive      Boolean      @default(true)
   userAccountId Int?
-  userAccount   userAccount? @relation(fields: [userAccountId], references: [id])
   roleId        Int?
   Role          Role?        @relation(fields: [roleId], references: [id])
- 
+  userAccount   userAccount? @relation(fields: [userAccountId], references: [id])
 
   @@schema("public")
 }
 
 model userAccount {
   id         Int      @id @default(autoincrement()) @db.SmallInt
-  accountId  Int
   username   String
   email      String
   password   String
-  userRoleId Int?
-  userRole   Role?    @relation(fields: [userRoleId], references: [id])
   isActive   Boolean  @default(true)
   created_at DateTime @default(now()) @db.Timestamptz(6)
-
-  users users[]
+  userRoleId Int?
+  accountId  Int
+  userRole   Role?    @relation(fields: [userRoleId], references: [id])
+  users      users[]
 
   @@schema("public")
 }
 
-model Address{
-  id           Int      @id      @default(autoincrement())
+model Address {
+  id           Int     @id @default(autoincrement())
   region       String?
   province     String?
   municipality String?
   barangay     String?
   floor_unit   String?
   zipcode      Int?
-  
+
   @@schema("public")
 }
-
-
-
 
 model Role {
   id          Int              @id @default(autoincrement())
   name        String           @unique
-  users       users[]
   permissions PagePermission[]
   userAccount userAccount[]
+  users       users[]
 
   @@schema("public")
 }
@@ -83,22 +77,19 @@ model PagePermission {
   pageId   Int
   canRead  Boolean @default(false)
   canWrite Boolean @default(false)
-
-  role Role @relation(fields: [roleId], references: [id])
-  page Page @relation(fields: [pageId], references: [id])
+  page     Page    @relation(fields: [pageId], references: [id])
+  role     Role    @relation(fields: [roleId], references: [id])
 
   @@unique([roleId, pageId])
   @@schema("public")
 }
 
-model AuditLogs{
-  id            Int       @id @default(autoincrement())
-  action        String?
-  module        String?
-  logTimeDate   DateTime?
-  accountId     Int?
+model AuditLogs {
+  id          Int       @id @default(autoincrement())
+  action      String?
+  module      String?
+  logTimeDate DateTime?
+  accountId   Int?
 
   @@schema("public")
-
 }
-

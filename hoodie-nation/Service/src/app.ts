@@ -5,7 +5,7 @@ import userRoutes from './modules/user.routes';
 
 const app = express();
 app.use(express.json());
-app.use('/api/users', userRoutes);
+app.use('/api', userRoutes);
 app.use(errorHandler);
 
 export default app;
