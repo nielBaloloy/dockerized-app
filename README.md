@@ -1,4 +1,4 @@
-# dockerized-app
+# Express + Prisma ORM Backend Boilerplate
 
 Stack:
 Frontend
